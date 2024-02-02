@@ -1,0 +1,46 @@
+.variant-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  --v-padding: 0.8rem 0;
+  --v-font-size-: 1.4rem;
+  --v-display: flex;
+  --v-bg: transparent;
+  --variant-inactive-color: rgba(var(--color-foreground), 0.5);
+}
+
+.variant-button {
+  padding: 0.8rem 0;
+  font-size: 1.4rem;
+  margin-top: 0.7rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid var(--variant-inactive-color);
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  font-family: 'Domine', serif;
+}
+
+.selected-variant {
+  cursor: auto;
+  font-style: italic;
+  border: 1px solid black;
+  font-family: var(--font-heading-family);
+  color: black;
+  /* pointer-events: none; */
+  text-decoration: none;
+}
+
+.disabled {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.selected-variant.disabled {
+  border: 1px solid var(--variant-inactive-color);
+  color: rgb(var(--color-foreground));
+}

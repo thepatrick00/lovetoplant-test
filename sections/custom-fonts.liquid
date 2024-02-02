@@ -1,0 +1,352 @@
+{% for block in section.blocks %}
+  {% case block.type %}
+  {% when 'font' %}
+    {% comment %} Normal Style Code {% endcomment %}
+    {%- assign currentWeight = 0 -%}
+    {%- for i in (1..9) -%}
+      {%- assign currentWeight = currentWeight | plus: 100 -%}
+      {%- assign fontID = 'normal-' | append: currentWeight -%}
+      {%- assign url = block.settings[fontID] | strip -%}
+      
+      {%- unless url == blank -%}
+
+        {%- capture file-format -%}
+          {% if url contains '.otf' %}
+          opentype
+          {% elsif url contains '.ttf' %}
+          truetype
+          {% elsif url contains '.svg' %}
+          svg
+          {% elsif url contains '.woff2' %}
+          woff2
+          {% elsif url contains '.eot' %}
+          embedded-opentype
+          {% else %}
+          woff
+          {% endif %}
+        {%- endcapture %}
+
+        {% style %}  
+          @font-face {
+            font-family: {{ block.settings.heading }};
+            font-style: normal;
+            font-weight: {{ currentWeight }};
+            font-display: swap;
+            src: local("{{ block.settings.heading | strip }}"), url("{{ url }}") format("{{ file-format | strip }}");
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+              U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074,
+              U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+          }
+        {% endstyle %}
+      {%- endunless -%}
+    {%- endfor -%}
+
+    {% comment %} Italic Style Code {% endcomment %}
+
+    {%- assign currentWeight = 0 -%}
+    {% for i in (1..9) -%}
+      {%- assign currentWeight = currentWeight | plus: 100 -%}
+      {%- assign fontID = 'italic-' | append: currentWeight -%}
+      {%- assign url = block.settings[fontID] | strip -%}
+      
+      {%- unless url == blank -%}
+
+        {%- capture file-format -%}
+          {% if url contains '.otf' %}
+          opentype
+          {% elsif url contains '.ttf' %}
+          truetype
+          {% elsif url contains '.svg' %}
+          svg
+          {% elsif url contains '.woff2' %}
+          woff2
+          {% elsif url contains '.eot' %}
+            embedded-opentype
+          {% else %}
+          woff
+          {% endif %}
+        {%- endcapture %}
+
+        {% style %}  
+          @font-face {
+            font-family: {{- block.settings.font-family -}};
+            font-style: italic;
+            font-weight: {{ currentWeight }};
+            font-display: swap;
+            src: local("{{ block.settings.font-family | strip }}"), url("{{ url }}") format("{{ file-format | strip }}");
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+              U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074,
+              U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+          }
+        {% endstyle %}
+
+      {%- endunless -%}
+    {%- endfor -%}
+
+    {% when 'variable-font' %}
+      {%- unless normal-url == blank -%}
+        {%- capture file-format -%}
+        {% if normal-url contains '.otf' %}
+        opentype
+        {% elsif normal-url contains '.ttf' %}
+        truetype
+        {% elsif normal-url contains '.svg' %}
+        svg
+        {% elsif normal-url contains '.woff2' %}
+        woff2
+        {% elsif normal-url contains '.eot' %}
+        embedded-opentype
+        {% else %}
+        woff
+        {% endif %}
+      {%- endcapture %}
+
+      {% style %}  
+        @font-face {
+          font-family: {{ block.settings.header }};
+          font-style: normal;
+          font-weight: {{ block.settings.normal-weight-min }} {{ block.settings.normal-weight-max }};
+          font-display: swap;
+          src: local("{{ block.settings.header | strip }}"), url("{{ normal-url }}") format("{{ file-format | strip }}");
+          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+            U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074,
+            U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+      {% endstyle %}
+    {%- endunless -%}
+
+    {%- unless italic-url == blank -%}
+        {%- capture file-format -%}
+        {% if italic-url contains '.otf' %}
+        opentype
+        {% elsif italic-url contains '.ttf' %}
+        truetype
+        {% elsif italic-url contains '.svg' %}
+        svg
+        {% elsif italic-url contains '.woff2' %}
+        woff2
+        {% elsif italic-url contains '.eot' %}
+        embedded-opentype
+        {% else %}
+        woff
+        {% endif %}
+      {%- endcapture %}
+
+      {% style %}  
+        @font-face {
+          font-family: {{ block.settings.title }};
+          font-style: italic;
+          font-weight: {{ block.settings.italic-weight-min }} {{ block.settings.italic-weight-max }};
+          font-display: swap;
+          src: local("{{ block.settings.title | strip }}"), url("{{ italic-url }}") format("{{ file-format | strip }}");
+          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+            U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074,
+            U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+      {% endstyle %}
+    {%- endunless -%}
+
+  {% endcase %}
+{% endfor %}
+
+<p style="font-family: Poppins; font-weight:100; font-style: normal;">Word</p>
+<p style="font-family: Poppins; font-weight:900; font-style: normal;">Word</p>
+<p style="font-family: Poppins; font-weight:100; font-style: italic;">Word</p>
+<p style="font-family: Poppins; font-weight:900; font-style: italic;">Word</p>
+
+{{ block.settings['normal-100'] }}
+
+
+{% schema %}
+{
+  "name": "Custom Fonts",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Made by Patrick Szydlowski"
+    },
+    {
+      "type": "paragraph",
+      "content": "For each font file you import, create a block that will link to the font url."
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Font",
+      "type": "font",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Font Family Name",
+          "default": "Font Name"
+        },
+        {
+          "type": "header",
+          "content": "Normal Style Fonts",
+          "info": "Copy and Paste your font file links from your Shopify Admin in [Content > Files](https://admin.shopify.com/store/c36d18-2/content/files?selectedView=all) here."
+        },
+        {
+          "type": "text",
+          "id": "normal-100",
+          "label": "normal-100-thin"
+        },
+        {
+          "type": "text",
+          "id": "normal-200",
+          "label": "normal-200-extralight"
+        },
+        {
+          "type": "text",
+          "id": "normal-300",
+          "label": "normal-300-light"
+        },
+        {
+          "type": "text",
+          "id": "normal-400",
+          "label": "normal-400-regular"
+        },
+        {
+          "type": "text",
+          "id": "normal-500",
+          "label": "normal-500-medium"
+        },
+        {
+          "type": "text",
+          "id": "normal-600",
+          "label": "normal-600-semibold"
+        },
+        {
+          "type": "text",
+          "id": "normal-700",
+          "label": "normal-700-bold"
+        },
+        {
+          "type": "text",
+          "id": "normal-800",
+          "label": "normal-800-extrabold"
+        },
+        {
+          "type": "text",
+          "id": "normal-900",
+          "label": "normal-900-black"
+        },
+        {
+          "type": "header",
+          "content": "Italic Style Fonts"
+        },
+        {
+          "type": "text",
+          "id": "italic-100",
+          "label": "italic-100-thin"
+        },
+        {
+          "type": "text",
+          "id": "italic-200",
+          "label": "italic-200-extralight"
+        },
+        {
+          "type": "text",
+          "id": "italic-300",
+          "label": "italic-300-light"
+        },
+        {
+          "type": "text",
+          "id": "italic-400",
+          "label": "italic-400-regular"
+        },
+        {
+          "type": "text",
+          "id": "italic-500",
+          "label": "italic-500-medium"
+        },
+        {
+          "type": "text",
+          "id": "italic-600",
+          "label": "italic-600-semibold"
+        },
+        {
+          "type": "text",
+          "id": "italic-700",
+          "label": "italic-700-bold"
+        },
+        {
+          "type": "text",
+          "id": "italic-800",
+          "label": "italic-800-extrabold"
+        },
+        {
+          "type": "text",
+          "id": "italic-900",
+          "label": "italic-900-black"
+        },
+        {
+          "type": "header",
+          "content": "Advanced Settings"
+        },
+        {
+          "type": "paragraph",
+          "content": "To improve font performance you can subset a range of characters using a unicode-range. If you site in English only, subsetting for Latin characters only will improve the font speed. If you don't select the checkbox you will just have all the characters available to you as normal and it will work with all the characters in the font. To learn more [Google Font glyph section](https://fonts.google.com/specimen/Roboto/glyphs)"
+        },
+        {
+          "type": "checkbox",
+          "id": "latin",
+          "label": "Latin",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "Variable Font",
+      "type": "variable-font",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Font Family Name"
+        },
+        {
+          "type": "header",
+          "content": "Normal Style Variable Font"
+        },
+        {
+          "type": "text",
+          "id": "normal-url",
+          "label": "Font Family URL",
+          "info": "Copy and Paste your font file link from your Shopify Admin in [Content > Files](https://admin.shopify.com/store/c36d18-2/content/files?selectedView=all) here."
+        },
+        {
+          "type": "number",
+          "id": "normal-weight-min",
+          "label": "Font Weight Minimum"
+        },
+        {
+          "type": "number",
+          "id": "normal-weight-max",
+          "label": "Font Weight Maximum"
+        },
+        {
+          "type": "header",
+          "content": "Italic Style Variable Font"
+        },
+        {
+          "type": "text",
+          "id": "italic-url",
+          "label": "Font Family URL",
+          "info": "Copy and Paste your font file link from your Shopify Admin in [Content > Files](https://admin.shopify.com/store/c36d18-2/content/files?selectedView=all) here."
+        },
+        {
+          "type": "number",
+          "id": "italic-weight-min",
+          "label": "Font Weight Minimum"
+        },
+        {
+          "type": "number",
+          "id": "italic-weight-max",
+          "label": "Font Weight Maximum"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

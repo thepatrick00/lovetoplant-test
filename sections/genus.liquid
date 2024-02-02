@@ -1,0 +1,51 @@
+{{ "section-genus.css" | asset_url | stylesheet_tag }}
+
+<main class="genus-page">
+  <section class="slanted-header">
+    <div class="slanted-header__inner">
+      {{ section.settings.ai-image  | image_url: width: 250 | image_tag: alt: "No image yet", class: "slanted-header__image" }}
+      <div class="slanted-header__text-ctr">
+        <h2 class="heading">{{ section.settings.title }}</h2>
+        <span class="body">Genus Care Guide</span>
+      </div>
+    </div>
+  </section>
+  
+  <section class="genus-description">
+    <h3 class="heading">Meet the {{ section.settings.name }} Family</h3>
+    <p class="body">{{ section.settings.short_description }}</p>
+  </section>
+</main>
+
+{% schema %}
+{
+  "name": "Genus Section",
+  "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "name",
+        "label": "name"
+      },
+      {
+        "type": "image_picker",
+        "id": "ai-image",
+        "label": "AI Image"
+      },
+      {
+        "type": "richtext",
+        "id": "short_description",
+        "label": "short_description"
+      }
+    ],
+  "presets": [
+    {
+      "name": "Genus Section"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+:root {
+  --spacing-multiplier: 8;
+  --spacing: calc(var(--spacing-multiplier) * 8 / 10 * 1rem);
+}
+
+.genus-page :where(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+}
+.genus-page {
+  padding: 0 5rem;
+}
+
+.slanted-header {
+  background-color: var(--theme-primary);
+  margin-bottom: var(--spacing);
+  --skewAngle: -2deg;
+  --adjustment: 3rem;
+  padding: calc(var(--adjustment) + 4rem) 4rem;
+  padding-bottom: calc(var(--adjustment) - 1rem);
+  transform: skewY(var(--skewAngle))
+    translateY(calc(var(--adjustment) * -1));
+}
+.slanted-header__inner {
+  transform: skewY(calc(var(--skewAngle) * -1));
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+.slanted-header__image {
+  width: 250px;
+}
+.slanted-header__text-ctr {
+  max-width: 740px;
+}
+.genus-description p {
+  max-width: 65ch;
+  color: var(--stone-800);
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 1.8rem;
+}

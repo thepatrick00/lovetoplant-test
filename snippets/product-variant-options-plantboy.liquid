@@ -1,0 +1,149 @@
+{% comment %} 
+          Renders product variant options 
+          Accepts:
+          - product: {Object} product object.
+          - option: {String}
+          - block: {Object} block object, can use to identify between dropdown or button(pill) setting. 
+          Usage: 
+          {% render 'product-variant-options-plantboy', 
+          product: product, 
+          block: block 
+          %}
+{% endcomment %}
+
+{% liquid
+  assign is_extrasmall_variant = false
+  assign is_small_variant = false
+  assign is_medium_variant = false
+  assign is_large_variant = false
+  assign is_extralarge_variant = false
+
+  # find which product size variant are we on
+  if product.handle contains 'extra' and product.handle contains 'small'
+    assign is_extrasmall_variant = true
+  elsif product.handle contains 'small'
+    assign is_small_variant = true
+  elsif product.handle contains 'medium'
+    assign is_medium_variant = true
+  elsif product.handle contains 'extra' and product.handle contains 'large'
+    assign is_extralarge_variant = true
+  elsif product.handle contains 'large'
+    assign is_large_variant = true
+  endif
+
+  # create handles to use in all_products to later check if size variants exist
+  assign handle = product.title | split: ',' | first | handleize
+  assign extrasmall_handle = handle | append: '-extra-small'
+  assign small_handle = handle | append: '-small'
+  assign medium_handle = handle | append: '-medium'
+  assign large_handle = handle | append: '-large'
+  assign extralarge_handle = handle | append: '-extra-large'
+
+  # get each product
+  assign xs-product = all_products[extrasmall_handle]
+  assign s-product = all_products[small_handle]
+  assign m-product = all_products[medium_handle]
+  assign l-product = all_products[large_handle]
+  assign xl-product = all_products[extralarge_handle]
+
+  # check if inventory exists
+  assign xs-outofstock = false
+  assign s-outofstock = false
+  assign m-outofstock = false
+  assign l-outofstock = false
+  assign xl-outofstock = false
+
+  if xs-product.selected_or_first_available_variant.inventory_quantity == 0 or xs-product.selected_or_first_available_variant.inventory_quantity == 69
+    assign xs-outofstock = true
+  endif
+  if s-product.selected_or_first_available_variant.inventory_quantity == 0 or s-product.selected_or_first_available_variant.inventory_quantity == 69
+    assign s-outofstock = true
+  endif
+  if m-product.selected_or_first_available_variant.inventory_quantity == 0 or m-product.selected_or_first_available_variant.inventory_quantity == 69
+    assign m-outofstock = true
+  endif
+  if l-product.selected_or_first_available_variant.inventory_quantity == 0 or l-product.selected_or_first_available_variant.inventory_quantity == 69
+    assign l-outofstock = true
+  endif
+  if xl-product.selected_or_first_available_variant.inventory_quantity == 0 or xl-product.selected_or_first_available_variant.inventory_quantity == 69
+    assign xl-outofstock = true
+  endif
+
+  assign xs-text = '2" Pot'
+  assign s-text = '4" Pot'
+  assign m-text = '6" Pot'
+  assign l-text = '8" Pot'
+  assign xl-text = '9-10" Wide'
+  
+  if product.handle == 'king-of-air-plants-medium' or product.handle == 'king-of-air-plants-large' or product.handle == 'king-of-air-plants-extra-large'
+    assign m-text = '5-6" Wide'
+    assign l-text = '8-9" Wide'
+  endif
+
+  # in development use http: //127.0.0.1: 9292/ instead of shop.url !just remove the dot
+    assign shopurl = shop.url
+%}
+
+{% unless xs-product == empty %}
+  <a href={{ shopurl | append: xs-product.url }} class="variant-button 
+    {% if is_extrasmall_variant %}selected-variant{% endif %}
+    {% if xs-outofstock %} disabled{% endif %}">
+    {% if is_extrasmall_variant %}
+      {% render 'icon-leaf-solid' %}
+    {% else %}
+      {% render 'icon-leaf' %}
+    {% endif %}
+    <span>{{xs-text}}</span>
+  </a>
+{% endunless %}
+
+{% unless s-product == empty %}
+  <a href={{ shopurl | append: s-product.url }} class="variant-button 
+    {% if is_small_variant %} selected-variant{% endif %} 
+    {% if s-outofstock %} disabled{% endif %}">
+    {% if is_small_variant %}
+      {% render 'icon-plant-solid' %}
+    {% else %}
+      {% render 'icon-plant' %}
+    {% endif %}
+    <span>{{s-text}}</span>
+  </a>
+{% endunless %}
+
+{% unless m-product == empty %}
+  <a href={{ shopurl | append: m-product.url }} class="variant-button 
+  {% if is_medium_variant %} selected-variant{% endif %} 
+  {% if m-outofstock %} disabled{% endif %}">
+    {% if is_medium_variant %}
+      {% render 'icon-potted-plant-solid' %}
+    {% else %}
+      {% render 'icon-potted-plant' %}{% endif %}
+    <span>{{m-text}}</span>
+  </a>
+{% endunless %}
+
+{% unless l-product == empty %}
+  <a href={{ shopurl | append: l-product.url }} class="variant-button 
+    {% if is_large_variant %} selected-variant{% endif %}
+    {% if l-outofstock %} disabled{% endif %}">
+    {% if is_large_variant %}
+      {% render 'icon-monstera-solid' %}
+    {% else %}
+      {% render 'icon-monstera' %}
+    {% endif %}
+    <span>{{l-text}}</span>
+  </a>
+{% endunless %}
+
+{% unless xl-product == empty %}
+  <a href={{ shopurl | append: xl-product.url }} class="variant-button 
+    {% if is_extralarge_variant %} selected-variant{% endif %}
+    {% if xl-outofstock %} disabled{% endif %}">
+    {% if is_extralarge_variant %}
+      {% render 'icon-palm-solid' %}
+    {% else %}
+      {% render 'icon-palm' %}
+    {% endif %}
+    <span>{{xl-text}}</span>
+  </a>
+{% endunless %}

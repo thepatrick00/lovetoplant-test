@@ -1,0 +1,163 @@
+  {{ 'hero.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  .underline {
+    background-image: linear-gradient(to right, {{ section.settings.underline_color }}, {{ section.settings.underline_color }});
+  }
+
+{% endstyle %}
+
+<div class="wrapper color-{{ section.settings.color_scheme }}">
+  <main class="hero">
+    <h1>
+      <span class="underline">Growing
+        <span class="special-text">joy</span>
+        one                                 
+
+          plant at a time</span>
+    </h1>
+    <div class="longimg">
+      <img
+        src={{ 'hero-smile.jpg' | file_img_url: 'grande'}}
+        alt=""
+        class="img" />
+    </div>
+    <div class="shortimg">
+      {{ section.settings.short_image | image_url: width: 400 | image_tag: preload: true, class: 'img', alt: 'succulent' }}
+    </div>
+
+    <div class="creative">
+      <div class="creative__wrapper">
+        <img
+          src={{ 'squiggly-arrow.png' | file_img_url: '284x213' }}
+          alt=""
+          class="creative__arrow">
+
+        <div class="creative__nametag">
+          <div class="text">{{ section.settings.featured-product-text }}</div>
+
+          {% if section.settings.featured-product-discount != nil %}
+            <div class="discount"> {{ section.settings.featured-product-discount }}</div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.featured-product-image == nil %}
+          <img
+            src={{ 'pinkanthurium-transparent.png' | file_img_url: 'grande' }}
+            alt=""
+            class="creative__img" />
+        {% else %}  
+          <a href={{ section.settings.featured-product-page }}>
+            <img
+            src={{ section.settings.featured-product-image.src | image_url: width: 600 }}
+            alt=""
+            class="creative__img" />
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="content">
+      <p class="content__text">
+        {{ section.settings.description }}
+      </p>
+      <div class="content__buttons">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'button' %}
+              <a href="{{ block.settings.url }}" class="button {% if block.settings.secondary_color %} button--secondary{% else %} button--primary{% endif %}">{{ block.settings.text }}</a>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+</div>
+
+{% schema %}
+  {
+    "name": "Custom Hero",
+    "tag": "section",
+    "limit": 1,
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "short_image",
+        "label": "Short Image"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "accent"
+      },
+      {
+        "type": "color",
+        "id": "underline_color",
+        "label": "Underline color",
+        "default": "#B6B983"
+      },
+      {
+        "type": "header",
+        "content": "Featured Product"
+      },
+      {
+        "type": "image_picker",
+        "id": "featured-product-image",
+        "label": "Featured Product Image"
+      },
+      {
+        "type": "url",
+        "id": "featured-product-page",
+        "label": "Featured Product Page"
+      },
+      {
+        "type": "text",
+        "id": "featured-product-text",
+        "label": "Featured Product Text",
+        "default": "Featured Plant"
+      },
+      {
+        "type": "text",
+        "id": "featured-product-discount",
+        "label": "Featured Product Discount",
+        "default": "10% OFF"
+      }
+
+    ],
+    "blocks": [
+      {
+        "name": "Button",
+        "type": "button",
+        "limit": 3,
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Button text"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Button link"
+          },
+          {
+            "type": "checkbox",
+            "id": "secondary_color",
+            "label": "Outline button",
+            "default": false
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Hero"
+      }
+    ]
+  }
+{% endschema %}
